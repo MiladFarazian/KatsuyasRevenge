@@ -10,6 +10,7 @@ public class GamePanel extends JPanel{
     private static final long serialVersionUID = 1L;
 
     private int level = 0;
+    private int currentSongLevel = 0;
     private GameState state = GameState.TITLE;
     private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
     private ArrayList<Collectable> coll = new ArrayList<Collectable>();
@@ -208,14 +209,17 @@ public class GamePanel extends JPanel{
             pc.setLife(10);
             pc.setAmmo(10);
             imgPC = loadImage("images/Backgrounds/mountain_background1-2.jpg");
-            if(songs.getSong() != null){
-                songs.getSong().stop();
-            }
-            try {
-                songs.setSong(1);
-                if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
-            } catch (Exception e) {
-                System.out.println("Could not load song 1: " + e.getMessage());
+            if(currentSongLevel != 1){
+                if(songs.getSong() != null){
+                    songs.getSong().stop();
+                }
+                try {
+                    songs.setSong(1);
+                    if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
+                    currentSongLevel = 1;
+                } catch (Exception e) {
+                    System.out.println("Could not load song 1: " + e.getMessage());
+                }
             }
             offset = 200;
             level = 1;
@@ -364,14 +368,17 @@ public class GamePanel extends JPanel{
             pc.setLife(10);
             pc.setAmmo(10);
             imgPC = loadImage("images/Backgrounds/sewer2.jpg");
-            if(songs.getSong() != null){
-                songs.getSong().stop();
-            }
-            try {
-                songs.setSong(2);
-                if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
-            } catch (Exception e) {
-                System.out.println("Could not load song 2: " + e.getMessage());
+            if(currentSongLevel != 2){
+                if(songs.getSong() != null){
+                    songs.getSong().stop();
+                }
+                try {
+                    songs.setSong(2);
+                    if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
+                    currentSongLevel = 2;
+                } catch (Exception e) {
+                    System.out.println("Could not load song 2: " + e.getMessage());
+                }
             }
             offset = 200;
             this.level = 2;
@@ -467,14 +474,17 @@ public class GamePanel extends JPanel{
             pc.setLife(10);
             pc.setAmmo(10);
             imgPC = loadImage("images/Backgrounds/city2.jpg");
-            if(songs.getSong() != null){
-                songs.getSong().stop();
-            }
-            try{
-                songs.setSong(3);
-                if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
-            } catch(Exception e){
-                System.out.println("Could not load song 3: " + e.getMessage());
+            if(currentSongLevel != 3){
+                if(songs.getSong() != null){
+                    songs.getSong().stop();
+                }
+                try{
+                    songs.setSong(3);
+                    if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
+                    currentSongLevel = 3;
+                } catch(Exception e){
+                    System.out.println("Could not load song 3: " + e.getMessage());
+                }
             }
             offset = -100;
             this.level = 3;
@@ -561,14 +571,17 @@ public class GamePanel extends JPanel{
             pc.setLife(10);
             pc.setAmmo(10);
             imgPC = loadImage("images/Backgrounds/Dojo_Background2.jpg");
-            if(songs.getSong() != null){
-                songs.getSong().stop();
-            }
-            try{
-                songs.setSong(4);
-                if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
-            } catch(Exception e){
-                System.out.println("Could not load song 4: " + e.getMessage());
+            if(currentSongLevel != 4){
+                if(songs.getSong() != null){
+                    songs.getSong().stop();
+                }
+                try{
+                    songs.setSong(4);
+                    if(songs.getSong() != null) songs.getSong().loop(javax.sound.sampled.Clip.LOOP_CONTINUOUSLY);
+                    currentSongLevel = 4;
+                } catch(Exception e){
+                    System.out.println("Could not load song 4: " + e.getMessage());
+                }
             }
             offset = 250;
             this.level = 4;
