@@ -6,9 +6,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-//import java.util.concurrent.TimeUnit;
-//import java.util.Timer;
-//import java.util.TimerTask;
 
 class SoundLibrary{
     private Clip soundThrow;
@@ -23,127 +20,108 @@ class SoundLibrary{
     private Clip soundYuh;
     private Clip soundPowerUp;
     public SoundLibrary(String filename)throws Exception{
+        String base = getBasePath();
+
         //throw
-        
-        File audiofile = new File("throw_1.wav");
-        AudioInputStream audiostream = AudioSystem.getAudioInputStream(audiofile);
-        soundThrow = AudioSystem.getClip();
-        soundThrow.open(audiostream);
-        
-        
+        soundThrow = loadClip(base + "throw_1.wav");
+
         //impact
-        
-        File audiofile2 = new File ("Impact_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile2);
-        soundImpact = AudioSystem.getClip();
-        soundImpact.open(audiostream);
-        
+        soundImpact = loadClip(base + "Impact_1.wav");
+
         //jump
-        
-        File audiofile3 = new File ("spin_jump.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile3);
-        soundJump = AudioSystem.getClip();
-        soundJump.open(audiostream);
-        
+        soundJump = loadClip(base + "spin_jump.wav");
+
         //footsteps
-        
-        File audiofile4 = new File ("running_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile4);
-        soundRun = AudioSystem.getClip();
-        soundRun.open(audiostream);
-        
+        soundRun = loadClip(base + "running_1.wav");
+
         // enemy sword
-        
-        File audiofile5 = new File ("sword_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile5);
-        soundSword = AudioSystem.getClip();
-        soundSword.open(audiostream);
-        
+        soundSword = loadClip(base + "sword_1.wav");
+
         //gong
-        
-        File audiofile6 = new File ("gong.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile6);
-        soundGong = AudioSystem.getClip();
-        soundGong.open(audiostream);
-        
-        //death
-        
-        //File audiofile7 = new File ("death_1.wav");
-        //audiostream = AudioSystem.getAudioInputStream(audiofile7);
-        //soundDeath = AudioSystem.getClip();
-        //soundDeath.open(audiostream);
-        
+        soundGong = loadClip(base + "gong.wav");
+
         //blip
-        
-        File audiofile8 = new File ("blip_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile8);
-        soundBlip = AudioSystem.getClip();
-        soundBlip.open(audiostream);
-        
+        soundBlip = loadClip(base + "blip_1.wav");
+
         //melee
-        
-        File audiofile9 = new File ("slap_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile9);
-        soundMelee = AudioSystem.getClip();
-        soundMelee.open(audiostream);
-        
-        //yuh
-        /*
-        File audiofile10 = new File ("yuhh_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile10);
-        soundYuh = AudioSystem.getClip();
-        soundYuh.open(audiostream);
-        */
+        soundMelee = loadClip(base + "slap_1.wav");
+
         //power up
-        
-        File audiofile11 = new File ("powerUp_1.wav");
-        audiostream = AudioSystem.getAudioInputStream(audiofile11);
-        soundPowerUp = AudioSystem.getClip();
-        soundPowerUp.open(audiostream);
+        soundPowerUp = loadClip(base + "powerUp_1.wav");
     }
-    
+
+    private String getBasePath() {
+        // Resolve path relative to where the class files are
+        try {
+            String classPath = SoundLibrary.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            File classDir = new File(classPath);
+            if (classDir.isFile()) {
+                classDir = classDir.getParentFile();
+            }
+            return classDir.getAbsolutePath() + File.separator;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private Clip loadClip(String path) {
+        try {
+            File audiofile = new File(path);
+            if (!audiofile.exists()) {
+                System.out.println("Sound file not found: " + path);
+                return null;
+            }
+            AudioInputStream audiostream = AudioSystem.getAudioInputStream(audiofile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audiostream);
+            return clip;
+        } catch (Exception e) {
+            System.out.println("Error loading sound: " + path + " - " + e.getMessage());
+            return null;
+        }
+    }
+
     public Clip getClips(String file){
-        if (file == "throw"){
-            //sound1.setFramePosition(0);
+        if (file.equals("throw") && soundThrow != null){
             soundThrow.setFramePosition(0);
             return soundThrow;
         }
-        else if (file == "impact"){
+        else if (file.equals("impact") && soundImpact != null){
             soundImpact.setFramePosition(0);
             return soundImpact;
         }
-        else if (file == "jump"){
+        else if (file.equals("jump") && soundJump != null){
             soundJump.setFramePosition(0);
             return soundJump;
         }
-        else if (file == "run"){
+        else if (file.equals("run") && soundRun != null){
             soundRun.setFramePosition(0);
             return soundRun;
         }
-        else if (file == "sword"){
+        else if (file.equals("sword") && soundSword != null){
             soundSword.setFramePosition(0);
             return soundSword;
         }
-        else if (file == "gong"){
+        else if (file.equals("gong") && soundGong != null){
             soundGong.setFramePosition(0);
             return soundGong;
         }
-        else if (file == "death"){
+        else if (file.equals("death") && soundDeath != null){
             return soundDeath;
         }
-        else if (file == "blip"){
+        else if (file.equals("blip") && soundBlip != null){
             soundBlip.setFramePosition(0);
             return soundBlip;
         }
-        else if (file == "melee"){
+        else if (file.equals("melee") && soundMelee != null){
             soundMelee.setFramePosition(0);
             return soundMelee;
         }
-        else if (file == "yuh"){
+        else if (file.equals("yuh") && soundYuh != null){
             soundYuh.setFramePosition(0);
             return soundYuh;
         }
-        else if (file == "powerUp"){
+        else if (file.equals("powerUp") && soundPowerUp != null){
             soundPowerUp.setFramePosition(0);
             return soundPowerUp;
         }

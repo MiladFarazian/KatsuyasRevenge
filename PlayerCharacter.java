@@ -18,15 +18,12 @@ public class PlayerCharacter extends Rigidbody{
     private SoundLibrary sounds;
     public PlayerCharacter(JPanel jp, String src, int x, int y, int w, int h, int[] numFrames, int cycles) throws Exception{
         super(jp, x, y, w, h);
-        //BoxCollider bc = new BoxCollider(this,18,18,getWidth()-35, getHeight()-18);
         BoxCollider bc = new BoxCollider(this,0,0,getWidth(), getHeight());
         getColliders().add(bc);
-        //CircleCollider cc = new CircleCollider(this, 0, 0, getWidth()/2);
-        //getColliders().add(cc);
         try{
              sounds = new SoundLibrary("x");
         } catch (Exception e ){
-            
+
         }
         animation = new Animation(this, src, numFrames);
         animation.setMotionState(0);
@@ -40,16 +37,6 @@ public class PlayerCharacter extends Rigidbody{
     public void setLife(int l){
         this.life = l;
     }
-    /*
-    public void setLife(int l){
-        if(l > 0){
-            this.life = l;
-        }else if(this.life <= 0){
-            animation.setMotionState(PlayerMotionState.DIE);
-        }
-        
-    }
-    */
     public void throwAnim(){
         animation.setMotionState(PlayerMotionState.THROW);
     }
@@ -58,7 +45,8 @@ public class PlayerCharacter extends Rigidbody{
         if(this.life < 0){
             this.life += l;
             animation.setMotionState(PlayerMotionState.DIE);
-            sounds.getClips("run").stop();
+            if(sounds != null && sounds.getClips("run") != null)
+                sounds.getClips("run").stop();
         }
     }
     public int getLife(){
@@ -80,37 +68,39 @@ public class PlayerCharacter extends Rigidbody{
         if(isInAir()){return;}
         setFallSpeed(JUMP_FORCE);
         setInAir(true);
-        
-        sounds.getClips("jump").loop(0);
-        
-        //animation.setMotionState(PlayerMotionState.JUMP_LEFT);
+
+        if(sounds != null && sounds.getClips("jump") != null)
+            sounds.getClips("jump").loop(0);
     }
     public void speedLeft(){
         if(speed >= -1 * MAX_SPEED){
             speed --;
             if(speed <= -5 && !isInAir()){
-                sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
+                if(sounds != null && sounds.getClips("run") != null)
+                    sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
-        
+
         animation.setMotionState(PlayerMotionState.RUN_LEFT);
     }
     public void speedRight(){
         if(speed <=  MAX_SPEED){
             speed ++;
             if(speed >= 5 && !isInAir()){
-                sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
+                if(sounds != null && sounds.getClips("run") != null)
+                    sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
-        
+
         animation.setMotionState(PlayerMotionState.RUN_RIGHT);
     }
     public void startRun(){
-        sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
-        //sounds.getClips("run").loop(1);
+        if(sounds != null && sounds.getClips("run") != null)
+            sounds.getClips("run").loop(Clip.LOOP_CONTINUOUSLY);
     }
     public void stopRun(){
-        sounds.getClips("run").stop();
+        if(sounds != null && sounds.getClips("run") != null)
+            sounds.getClips("run").stop();
     }
     public void slowDown(){
         if(speed > 0){
@@ -120,7 +110,8 @@ public class PlayerCharacter extends Rigidbody{
         } else if(this.life > 0){
             animation.setMotionState(PlayerMotionState.IDLE);
         }
-        sounds.getClips("run").stop();
+        if(sounds != null && sounds.getClips("run") != null)
+            sounds.getClips("run").stop();
     }
     @Override
     public void draw(Graphics g) {
@@ -130,10 +121,9 @@ public class PlayerCharacter extends Rigidbody{
         for(Collider c: getColliders()){
             //c.draw(g);
         }
-        
+
         //Lifebar
         g.setColor(Color.RED);
-        //                                        life * 8
         g.fillRect(getX(),getY() - getHeight()/2, 80, 10);
         g.setColor(Color.GREEN);
         g.fillRect(getX(),getY() - getHeight()/2, this.life * 8, 10);

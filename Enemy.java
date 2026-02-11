@@ -29,10 +29,9 @@ public class Enemy extends Rigidbody{
         detectCircle = new CircleCollider(this, -radius + getWidth()/2, -200 + getHeight()/2, radius);
         this.MAX_SPEED = speed;
         this.health = health_;
-        //getColliders().add(detectCircle);
         c = this.health * 12;
-        sounds = new SoundLibrary("x");
-        imgPC = new ImageIcon(src);
+        try { sounds = new SoundLibrary("x"); } catch (Exception e) {}
+        imgPC = new ImageIcon(ResourcePath.resolve(src));
     }
     public Enemy(JPanel jpanel, int x, int y, String src, int aDamage, int health_) throws Exception{
         this(jpanel, x, y, 72, 81, src, aDamage, health_, false, 4);
@@ -49,10 +48,9 @@ public class Enemy extends Rigidbody{
         }
         this.MAX_SPEED = speed;
         this.health = health_;
-        //getColliders().add(detectCircle);
         c = this.health * 12;
-        sounds = new SoundLibrary("x");
-        imgPC = new ImageIcon(src);
+        try { sounds = new SoundLibrary("x"); } catch (Exception e) {}
+        imgPC = new ImageIcon(ResourcePath.resolve(src));
     }
     public Enemy(JPanel jpanel, int x, int y, int w, int h, String src, int aDamage, int health_, boolean boss, int speed) throws Exception{
         super(jpanel, x, y, w, h);
@@ -63,21 +61,20 @@ public class Enemy extends Rigidbody{
         this.attackDamage = aDamage;
         detectCircle = new CircleCollider(this, -200 + getWidth()/2, -200 + getHeight()/2, 200);
         this.health = health_;
-        //getColliders().add(detectCircle);
         c = this.health * 12;
-        sounds = new SoundLibrary("x");
+        try { sounds = new SoundLibrary("x"); } catch (Exception e) {}
         if(boss){
             detectCircle = new CircleCollider(this, -600 + getWidth()/2, -200 + getHeight()/2, 600);
         }
         this.MAX_SPEED = speed;
-        imgPC = new ImageIcon(src);
+        imgPC = new ImageIcon(ResourcePath.resolve(src));
     }
     public ArrayList getHit(){
         return this.hitMe;
     }
     public void detect(PlayerCharacter pc, ArrayList<GameObject> go){
         attackDelay -= .1;
-        if(detectCircle.hit((GameObject)pc)){
+        if(detectCircle != null && detectCircle.hit((GameObject)pc)){
             if(!pc.hit(this) && (getX() + getWidth() < pc.getX() || getX() > pc.getX() + pc.getWidth())){
                 if(pc.getX() > getX()){
                     speedRight();
@@ -85,13 +82,13 @@ public class Enemy extends Rigidbody{
                     speedLeft();
                 }
             } else if(pc.hit(this) && attackDelay <= 0){
-                //pc.setLife(pc.getLife() - this.attackDamage);
                 if(pc.getLife() <= attackDamage){
                     pc.setLife(0);
                 }
                 pc.reduceLife(this.attackDamage);
-                
-                sounds.getClips("sword").loop(0);
+
+                if(sounds != null && sounds.getClips("sword") != null)
+                    sounds.getClips("sword").loop(0);
                 attackDelay = 5;
             } else {
                 setMoveSpeed(0);
@@ -138,8 +135,15 @@ public class Enemy extends Rigidbody{
     }
     public void draw(Graphics g) {
         if(isVisible()){
-            
-            imgPC.paintIcon(getPanel() , g, getX(), getY());
+            if(imgPC != null && imgPC.getIconWidth() > 0) {
+                imgPC.paintIcon(getPanel(), g, getX(), getY());
+            } else {
+                // Fallback: draw enemy as a red rectangle
+                g.setColor(new Color(180, 40, 40));
+                g.fillRect(getX(), getY(), getWidth(), getHeight());
+                g.setColor(Color.BLACK);
+                g.drawRect(getX(), getY(), getWidth(), getHeight());
+            }
         }
         for(Collider c: getColliders()){
             //c.draw(g);

@@ -24,18 +24,19 @@ public class Bullet extends GameObject
         this.dir = dir;
         go = k;
         if(dir > 0){
-            imgPC  = new ImageIcon("images/throwingKnifeRight.png");
+            imgPC  = new ImageIcon(ResourcePath.resolve("images/throwingKnifeRight.png"));
             setX(getX() + 25);
         } else {
-            imgPC  = new ImageIcon("images/throwingKnifeLeft.png");
+            imgPC  = new ImageIcon(ResourcePath.resolve("images/throwingKnifeLeft.png"));
             setX(getX() - 70);
         }
         try{
              sounds = new SoundLibrary("x");
         } catch (Exception e ){
-            
+
         }
-        sounds.getClips("throw").loop(0);
+        if(sounds != null && sounds.getClips("throw") != null)
+            sounds.getClips("throw").loop(0);
     }
     public boolean isUsable(){
         return use;
@@ -45,7 +46,7 @@ public class Bullet extends GameObject
     }
     public void move(ArrayList<GameObject> k){
         setX(getX() + (speed*dir));
-        
+
         deathTime-= .1;
         if(deathTime <= 0){
             k.remove(this);
@@ -69,11 +70,15 @@ public class Bullet extends GameObject
     }
     public void draw(Graphics g){
         if(isVisible()){
-            
-            imgPC.paintIcon(getPanel() , g, getX(), getY());
-            
-            g.setColor(new Color (200, 150, 100));
-            //g.fillRect(getX(), getY(), getWidth(), getHeight());
+            if(imgPC != null && imgPC.getIconWidth() > 0) {
+                imgPC.paintIcon(getPanel(), g, getX(), getY());
+            } else {
+                // Fallback: draw knife as a small colored rectangle
+                g.setColor(new Color(200, 200, 200));
+                g.fillRect(getX(), getY(), getWidth(), getHeight());
+                g.setColor(Color.DARK_GRAY);
+                g.drawRect(getX(), getY(), getWidth(), getHeight());
+            }
             for(Collider c: getColliders()){
                 //c.draw(g);
             }
